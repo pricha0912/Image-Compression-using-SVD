@@ -1,0 +1,29 @@
+import os
+import numpy as nmp
+from PIL import Imge
+import matplotlib.pyplot as pl
+path = ’desert.jpg’
+img = Imge.open(path)
+s = float(os.path.getsize(path))/1000
+print(”Size(dimension): ”,img.size)
+pl.title(”Original Image (
+pl.imshow(img) imagegray = img.convert(’LA’)
+imagemat = nmp.array( list(imagegray.getdata(band = 0)),
+float)
+imagemat.shape = (imagegray.size[1], imagegray.size[0])
+imagemat = nmp.matrix(imagemat)
+pl.figure()
+pl.imshow(imagemat, cmap = ’gray’)
+pl.title(”Image after converting it into the Grayscale pattern”)
+plt.show()
+print(”After compression: ”)
+U, S, Vt = nmp.linalg.svd(imagemat)
+for i in range(1,300,50):
+cmpimg = nmp.matrix(U[:, :i]) * nmp.diag(S[:i]) *
+nmp.matrix(Vt[:i,:])
+pl.imshow(cmpimg, cmap = ’gray’)
+titleImg = ” Image after compression, s =
+pl.title(titleImg)
+pl.show()
+result = Imge.fromarray((cmpimg ).astype(nmp.uint8))
+result.save(’compressed.jpg’)
